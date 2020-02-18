@@ -30,8 +30,7 @@ vd($infos);
                 <p><b>Description</b></p>
                 <p><?php echo $infos[0]['description']; ?></p>
                 <p><b>Locatisation</b></p>
-                <iframe src="https://www.google.com/maps/embed?<?php echo $infos[0]['adresse'] . '+' .$infos[0]['cp'] . '+' . $infos[0]['ville'];  ?>" width="300" height="auto" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2782.5658888785483!2d3.0810466155680496!3d45.779889579105976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f71bdda2957945%3A0x107323d08e78f66a!2s3%20Rue%20Dulaure%2C%2063000%20Clermont-Ferrand!5e0!3m2!1sfr!2sfr!4v1582041573986!5m2!1sfr!2sfr" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                <iframe width="auto" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.it/maps?q=<?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?>&output=embed"></iframe>
                 <p>Adresse : <?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville'] ; ?></p>
                 <p>Tarif : <?php echo $infos[0]['prix'] . ' €'; ?></p>
             </div>

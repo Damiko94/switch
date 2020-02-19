@@ -2,7 +2,7 @@
 include '../inc/init.inc.php';
 include '../inc/fonction.inc.php';
 
-if(!user_is_admin()){
+if (!user_is_admin()) {
     header('location:../connexion.php');
     exit();
 }
@@ -11,29 +11,16 @@ $today = date('Y-m-d');
 
 // création de variable vide que l'on remplira avec les données du formulaire
 
-$id_produit ='';
-$date_arrivee ='';
-$date_depart ='';
-$salle ='';
+$id_produit = '';
+$date_arrivee = '';
+$date_depart = '';
+$salle = '';
 $prix = '';
 $etat = '';
+$control_date = '';
+$nb_produit = '';
 
-/**********************************************************
- **********************************************************
- *************** RECUPERATION DATE PRODUIT ****************
- **********************************************************
- *********************************************************/
-
-$date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit");
-$liste_date = $date_produit->fetchAll(PDO::FETCH_ASSOC);
-vd($liste_date);
-
-/**********************************************************
- * ********************************************************
- **************** FIN RECUP DATE PRODUIT ******************
- * ********************************************************
- *********************************************************/
-if(isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_produit'])) {
+if (isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_produit'])) {
     $suppression = $pdo->prepare("DELETE FROM produit WHERE id_produit = :id_produit");
     $suppression->bindParam(":id_produit", $_GET['id_produit'], PDO::PARAM_STR);
     $suppression->execute();
@@ -69,10 +56,37 @@ if (
     $prix = trim($_POST['prix']);
     $etat = $_POST['etat'];
 
+    /******************************************************************************************
+    ************************ controle des dates avant enregistrement produit ******************
+     ******************************************************************************************/
+
+    $date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit WHERE id_salle = $salle");
+    $nb_produit = $date_produit->rowcount();
+    $control_date = $date_produit ->fetchAll(PDO::FETCH_ASSOC);
+
+    // condition de date, tester si les dates d'arrivée et de départ sont inférieurs à la date d'arrivée et la date de départ enregistrer pour un produit
+    // ou si elles sont supérieur aux dates arrivee et depart.
+    // si oui tester avec les dates du produit suivant, sachant que l'on ne recupere que les produits ayant la meme id_salle pour les tester dans la variable $control_date
+
+    for ($i = 0; $i < $nb_produit; $i++){
+        if(($date_arrivee < $control_date[$i]['date_arrivee'] && $date_depart < $control_date[$i]['date_arrivee'])
+            || ($date_arrivee > $control_date[$i]['date_depart'] && $date_depart > $control_date[$i]['date_depart'])) {
+        }
+        else{
+            $msg .= '<div class="alert alert-danger mt-3">Dates indisponibles pour créer un nouveau produit avec cette salle</div>';
+        }
+    }
+    /*******************************************************************************************
+     ************************** fin controle des date ******************************************
+     *******************************************************************************************/
+
+    // FONCTIONNE POUR EMPECHER LA CR2ATION DE NOUVEAU PRODUIT SUR DES DATES EXISTANTES , MAIS BLOQUE LA MODIFICATION DES DATES
+
     // condition pour que la date d'entrèe du formulaire soit supérieur à la date d'aujourd'hui
-    if ($date_arrivee < $today){
+    if ($date_arrivee < $today ) {
         $msg .= '<div class="alert alert-danger mt-3">Attention votre date d\'arrivée est antérieur à la date actuelle !</div>';
     } else {
+        if (empty($msg)) {
         // preparation à l'enregistrement des variables en BDD
         // conditions pour faire une modification du produit dans la base de donnée
         if (!empty($_POST['id_salle'])) {
@@ -96,6 +110,7 @@ if (
         $enregistrement_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
         $enregistrement_produit->execute();
     }
+    }
 }
 
 /**************************************************************************
@@ -115,7 +130,7 @@ include '../inc/nav.inc.php';
 
 // récupération d'infos dans la table salle, pour le formulaire de gestion des produits
 
-$infos_salle =$pdo->query("SELECT id_salle, titre, ville, adresse, cp, capacite FROM salle");
+$infos_salle = $pdo->query("SELECT id_salle, titre, ville, adresse, cp, capacite FROM salle");
 // enregistrement des infos des salles dans des variables;
 
 // récupération des infos dans la table produit
@@ -133,7 +148,7 @@ echo '<th>Etat</th>';
 echo '<th>Actions</th>';
 echo '</tr>';
 
-while($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
+while ($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
     echo '<tr>';
 
     echo '<td>' . $produit['id_produit'] . '</td>';
@@ -155,16 +170,19 @@ while($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
             <td colspan="7">
                 <form action="?enregistrer" method="POST" enctype="multipart/form-data">
                     <h1 class="text-center pt-5">Modifier votre produit</h1>
-                    <p class="text-center"><a href="?action=annuler" class="btn btn-danger">Annuler votre modification</a></p>
+                    <p class="text-center"><a href="?action=annuler" class="btn btn-danger">Annuler votre
+                            modification</a></p>
                     <div class="row p-3">
                         <div class="col-6 p-3">
                             <div class="form-group">
                                 <label for="date_arrivee">Date d'arrivée</label>
-                                <input type="date" id="date_arrivee" name="date_arrivee" value="<?php echo $produit['date_arrivee'] ?>" class="form-control">
+                                <input type="date" id="date_arrivee" name="date_arrivee"
+                                       value="<?php echo $produit['date_arrivee'] ?>" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="date">Date de départ</label>
-                                <input type="date" id="date_depart" name="date_depart" value="<?php echo $produit['date_depart'] ?>" class="form-control">
+                                <input type="date" id="date_depart" name="date_depart"
+                                       value="<?php echo $produit['date_depart'] ?>" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="salle">Salle</label>
@@ -172,8 +190,9 @@ while($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
                                     <?php
                                     while ($salle = $infos_salle->fetch(PDO::FETCH_ASSOC)) {
                                         echo '<option value="' . $salle['id_salle'] . '"';
-                                        if ($salle['id_salle'] == $produit['id_salle']){
-                                        echo 'selected';}
+                                        if ($salle['id_salle'] == $produit['id_salle']) {
+                                            echo 'selected';
+                                        }
                                         echo '>' . $salle['id_salle'] . ' - ' . $salle['titre'] . ' - ' . $salle['adresse'] . ', ' . $salle['cp'] . ', ' . $salle['ville'] . ' - ' . $salle['capacite'] . ' pers</option>';
                                     }
                                     ?>
@@ -215,10 +234,11 @@ echo '</div>';
  **************************************************************************
  *************************************************************************/
 
-
-vd($_POST);
-if(empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
-?>
+// controle de la recuperation des dates produits quand on enregistre une nouvelle salle
+vd($control_date);
+vd($nb_produit);
+if (empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
+    ?>
     <section>
         <?php echo $msg; ?>
         <form action="" method="POST" enctype="multipart/form-data">
@@ -267,6 +287,6 @@ if(empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] !=
             </div>
         </form>
     </section>
-<?php
+    <?php
 }
 include '../inc/footer.inc.php';

@@ -34,13 +34,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo URL ?>profil.php">Profil</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo URL ?>connexion.php?action=deconnexion">Deconnexion</a>
+                        </li>
                     <?php } else { ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo URL ?>admin/gestion_admin.php">Administration</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo URL ?>connexion.php?action=deconnexion">Deconnexion</a>
-                        </li>
+
                     <?php }
                 } ?>
             </ul>

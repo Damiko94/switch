@@ -20,3 +20,6 @@ function user_is_admin() {
         return false;
     }
 }
+function control_date($a, $b) {
+
+}

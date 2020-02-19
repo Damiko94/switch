@@ -6,6 +6,8 @@ if(!user_is_admin()){
     header('location:../connexion.php');
     exit();
 }
+// recuperation de la date d'aujourd'hui pour la gestion de l'enregistrement produit
+$today = date('Y-m-d');
 
 // création de variable vide que l'on remplira avec les données du formulaire
 
@@ -17,8 +19,18 @@ $prix = '';
 $etat = '';
 
 /**********************************************************
+ **********************************************************
+ *************** RECUPERATION DATE PRODUIT ****************
+ **********************************************************
+ *********************************************************/
+
+$date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit");
+$liste_date = $date_produit->fetchAll(PDO::FETCH_ASSOC);
+vd($liste_date);
+
+/**********************************************************
  * ********************************************************
- *  \ SUPPRESSION D'UNE SALLE ****************************
+ **************** FIN RECUP DATE PRODUIT ******************
  * ********************************************************
  *********************************************************/
 if(isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_produit'])) {
@@ -30,7 +42,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_
 }
 /**********************************************************
  **********************************************************
- *  \ FIN DE SUPPRESSION D'UNE SALLE *********************
+ *  \ FIN DE SUPPRESSION D'UNE SALLE **********************
  **********************************************************
  *********************************************************/
 
@@ -49,7 +61,7 @@ if (
     isset($_POST['salle']) &&
     isset($_POST['prix'])) {
 
-//si les variables POST existent, on les enregistrent dans d'autre variables en passant par un trim
+    //si les variables POST existent, on les enregistrent dans d'autre variables en passant par un trim
 
     $date_arrivee = trim($_POST['date_arrivee']);
     $date_depart = trim($_POST['date_depart']);
@@ -57,7 +69,7 @@ if (
     $prix = trim($_POST['prix']);
     $etat = $_POST['etat'];
     // preparation à l'enregistrement des variables en BDD
-    // conditions pour faire une modification du produit dasn la base de donnée
+    // conditions pour faire une modification du produit dans la base de donnée
     if (!empty($_POST['id_salle'])) {
         // si $id_salle n'est pas vide c'est un UPDATE
         $enregistrement_produit = $pdo->prepare("UPDATE produit 

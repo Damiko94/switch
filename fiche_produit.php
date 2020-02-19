@@ -5,6 +5,7 @@ include 'inc/fonction.inc.php';
 // variable vide pour eviter des erreurs
 $commande_enregistre = '';
 $etat = '';
+
 /**************************************************************************
  * ************************************************************************
  ******************* DEBUT AFFICHAGE DE LA FICHE PRODUIT*******************

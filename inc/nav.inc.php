@@ -14,15 +14,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo URL; ?>inscription.php">Inscription</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo URL; ?>connexion.php">Connexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Profil</a>
-                </li>
+                <?php if(!user_is_connect()) { ?>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>inscription.php">Inscription</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>connexion.php">Connexion</a>
+                    </li>
+
+                <?php } else { ?>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>acceuil.php">Acceuil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>profil.php">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>connexion.php?action=deconnexion">Deconnexion</a>
+                    </li>
+
+                <?php } ?>
             </ul>
         </div>
     </div>

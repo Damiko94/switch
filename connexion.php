@@ -2,6 +2,10 @@
 include 'inc/init.inc.php';
 include 'inc/fonction.inc.php';
 
+// déconnexion
+if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
+    session_destroy();
+}
 
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
@@ -36,7 +40,7 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
             $_SESSION['membre'] ['statut'] = $info['statut'];
 
             if (user_is_admin()){
-                header('location:admin/gestion_admin.php');
+                header('location:' . URL . 'admin/gestion_admin.php');
             }else{
                 header('location:' . URL . 'acceuil.php');
             }

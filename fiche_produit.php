@@ -2,6 +2,15 @@
 include 'inc/init.inc.php';
 include 'inc/fonction.inc.php';
 
+// variable vide pour eviter des erreurs
+$commande_enregistre = '';
+$etat = '';
+/**************************************************************************
+ * ************************************************************************
+ ******************* DEBUT AFFICHAGE DE LA FICHE PRODUIT*******************
+ **************************************************************************
+ * ***********************************************************************/
+
 $id_produit = '';
 if (isset($_GET['id_produit'])) {
     $id_produit = $_GET['id_produit'];
@@ -15,15 +24,59 @@ if (isset($_GET['id_produit'])) {
 // recuperation des photos des salles pour l'affichage des autres produits
 $photo_salle = $pdo->query("SELECT photo FROM salle");
 
+/**************************************************************************
+ * ************************************************************************
+ ******************** FIN AFFICHAGE DE LA FICHE PRODUIT********************
+ **************************************************************************
+ * ***********************************************************************/
+
+/**************************************************************************
+ * ************************************************************************
+ ******************* DEBUT ENREGISTREMENT COMMANDE ************************
+ **************************************************************************
+ * ***********************************************************************/
+
+if (isset($_GET['action']) && $_GET['action'] == 'reserver') {
+    if (!user_is_connect()) {
+        $msg .= '<div class="alert alert-danger mt-3">Veuillez vous connecter ou vous inscrire pour passer votre commande !</div>';
+    } else {
+        $id_membre = $_SESSION['membre']['id_membre'];
+        $etat = 'reservation';
+        $enregistrement_commande = $pdo->prepare("INSERT INTO commande (id_membre, id_produit, date_enregistrement) VALUES (:id_membre, :id_produit, NOW())");
+        $enregistrement_commande->bindParam(":id_membre", $id_membre,PDO::PARAM_STR );
+        $enregistrement_commande->bindParam(":id_produit", $id_produit,PDO::PARAM_STR );
+        $enregistrement_commande->execute();
+
+        $changement_statut_produit = $pdo->prepare("UPDATE produit SET etat = :etat WHERE id_produit = :id_produit");
+        $changement_statut_produit->bindParam(":id_produit", $id_produit, PDO::PARAM_STR);
+        $changement_statut_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
+        $changement_statut_produit->execute();
+
+        $commande_enregistre = '<div class="alert alert-success mt-3">Votre commande est bien enregistrée, merci pour votre confiance.</div>';
+    }
+}
+
+/**************************************************************************
+ * ************************************************************************
+ ********************* FIN ENREGISTREMENT COMMANDE ************************
+ **************************************************************************
+ * ***********************************************************************/
+
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
-//vd($infos);
+vd($_SESSION);
 
 ?>
     <section class="container">
+        <?php
+        echo $msg;
+        echo $commande_enregistre;
+        ?>
         <div class="row justify-content-between pt-3">
             <div class="col-3"><?php echo $infos[0]['titre']; ?></div>
-            <div class="col-3"><a href="?action=reserver&id_produit=<?php echo $id_produit; ?>"><button type="button">Réserver</button></a></div>
+            <div class="col-3"><a href="?action=reserver&id_produit=<?php echo $id_produit; ?>">
+                    <button type="button">Réserver</button>
+                </a></div>
         </div>
         <hr>
         <div class="row">
@@ -35,7 +88,8 @@ include 'inc/nav.inc.php';
                 <p><?php echo $infos[0]['description']; ?></p>
                 <p><b>Locatisation</b></p>
 
-                <iframe width="100%" height="auto" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.it/maps?q=<?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?>&output=embed"></iframe>
+                <iframe width="100%" height="auto" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                        src="https://maps.google.it/maps?q=<?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?>&output=embed"></iframe>
             </div>
         </div>
         <hr>
@@ -50,22 +104,23 @@ include 'inc/nav.inc.php';
                 <p>Catégorie : <?php echo $infos[0]['categorie'] ?></p>
             </div>
             <div class="col-4">
-                <p>Adresse : <?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?></p>
+                <p>Adresse
+                    : <?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?></p>
                 <p>Tarif : <?php echo $infos[0]['prix'] ?></p>
             </div>
         </div>
     </section>
     <section class="container">
         <div class="row">
-        <?php
-            while ($photo = $photo_salle->fetch(PDO::FETCH_ASSOC)){
-        ?>
-            <div class="col-3"><img src="<?php echo URL . 'img/' . $photo['photo']; ?>"class="img-thumbnail"></div>
-        <?php } ?>
+            <?php
+            while ($photo = $photo_salle->fetch(PDO::FETCH_ASSOC)) {
+                ?>
+                <div class="col-3"><img src="<?php echo URL . 'img/' . $photo['photo']; ?>" class="img-thumbnail"></div>
+            <?php } ?>
         </div>
         <hr>
         <div class="row justify-content-between pb-3">
-            <a href="avis.php?id_produit=<?php $id_produit;?>" class="btn-link">Déposer un commentaire et une note</a>
+            <a href="avis.php?id_produit=<?php $id_produit; ?>" class="btn-link">Déposer un commentaire et une note</a>
             <a href="acceuil.php" class="btn-link">Retour vers le catalogue</a>
         </div>
     </section>

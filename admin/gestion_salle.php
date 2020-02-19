@@ -2,6 +2,11 @@
 include '../inc/init.inc.php';
 include '../inc/fonction.inc.php';
 
+if(!user_is_admin()){
+    header('location:../connexion.php');
+    exit();
+}
+
 /**********************************************************
  * ********************************************************
  *  \ SUPPRESSION D'UNE SALLE *****************************

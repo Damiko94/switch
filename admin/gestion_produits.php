@@ -68,30 +68,34 @@ if (
     $salle = trim($_POST['salle']);
     $prix = trim($_POST['prix']);
     $etat = $_POST['etat'];
-    // preparation à l'enregistrement des variables en BDD
-    // conditions pour faire une modification du produit dans la base de donnée
-    if (!empty($_POST['id_salle'])) {
-        // si $id_salle n'est pas vide c'est un UPDATE
-        $enregistrement_produit = $pdo->prepare("UPDATE produit 
+
+    // condition pour que la date d'entrèe du formulaire soit supérieur à la date d'aujourd'hui
+    if ($date_arrivee < $today){
+        $msg .= '<div class="alert alert-danger mt-3">Attention votre date d\'arrivée est antérieur à la date actuelle !</div>';
+    } else {
+        // preparation à l'enregistrement des variables en BDD
+        // conditions pour faire une modification du produit dans la base de donnée
+        if (!empty($_POST['id_salle'])) {
+            // si $id_salle n'est pas vide c'est un UPDATE
+            $enregistrement_produit = $pdo->prepare("UPDATE produit 
                                                        SET date_arrivee = :date_arrivee,
                                                            date_depart = :date_depart,
                                                            id_salle = :id_salle,
                                                            prix = :prix,
                                                            etat = :etat                                                  
                                                         WHERE id_produit = :id_produit");
-        $enregistrement_produit->bindParam(":id_produit", $_POST['id_produit']);
-    } else {
-
-        $enregistrement_produit = $pdo->prepare("INSERT INTO produit (id_salle, date_arrivee, date_depart, prix, etat)
+            $enregistrement_produit->bindParam(":id_produit", $_POST['id_produit']);
+        } else {
+            $enregistrement_produit = $pdo->prepare("INSERT INTO produit (id_salle, date_arrivee, date_depart, prix, etat)
                                                          VALUES (:id_salle, :date_arrivee, :date_depart, :prix, :etat)");
-    }
+        }
         $enregistrement_produit->bindParam(":id_salle", $salle, PDO::PARAM_STR);
         $enregistrement_produit->bindParam(":date_arrivee", $date_arrivee, PDO::PARAM_STR);
         $enregistrement_produit->bindParam(":date_depart", $date_depart, PDO::PARAM_STR);
         $enregistrement_produit->bindParam(":prix", $prix, PDO::PARAM_STR);
         $enregistrement_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
         $enregistrement_produit->execute();
-
+    }
 }
 
 /**************************************************************************
@@ -216,6 +220,7 @@ vd($_POST);
 if(empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
 ?>
     <section>
+        <?php echo $msg; ?>
         <form action="" method="POST" enctype="multipart/form-data">
             <h1 class="text-center pt-5">Gestion des produits</h1>
             <div class="row p-5">

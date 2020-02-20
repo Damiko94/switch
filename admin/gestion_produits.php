@@ -19,6 +19,7 @@ $prix = '';
 $etat = '';
 $control_date = '';
 $nb_produit = '';
+$mod_prod = '';
 
 if (isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_produit'])) {
     $suppression = $pdo->prepare("DELETE FROM produit WHERE id_produit = :id_produit");
@@ -40,14 +41,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id
  ****************************************************************************
  **************************************************************************/
 
-if (isset($_GET['action']) && $_GET['action'] == 'modifier'){
-    $mod_prod = $_GET['id_produit'];
-    $salle = $_GET['id_salle'];
-    $date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit WHERE id_salle =$salle AND id_produit != $mod_prod");
-    $nb_produit = $date_produit->rowcount();
-    $control_date = $date_produit ->fetchAll(PDO::FETCH_ASSOC);
-}
-
 // verification de l'existence de variables POST, si un formulaire a été validé
 
 if (
@@ -63,12 +56,16 @@ if (
     $salle = trim($_POST['salle']);
     $prix = trim($_POST['prix']);
     $etat = $_POST['etat'];
+    if(isset($_POST['mod_prod'])) {$mod_prod = $_POST['mod_prod'];}
 
     /******************************************************************************************
-    ************************ controle des dates avant enregistrement produit ******************
+     ************************ controle des dates avant enregistrement produit ******************
      ******************************************************************************************/
 
-    $date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit WHERE id_salle = $salle");
+    $date_produit = $pdo->prepare("SELECT date_arrivee, date_depart FROM produit WHERE id_salle = :salle AND id_produit != :produit");
+    $date_produit->bindParam(":salle", $salle, PDO::PARAM_STR);
+    $date_produit->bindParam(":produit", $mod_prod, PDO::PARAM_STR);
+    $date_produit->execute();
     $nb_produit = $date_produit->rowcount();
     $control_date = $date_produit->fetchAll(PDO::FETCH_ASSOC);
 
@@ -76,11 +73,10 @@ if (
     // ou si elles sont supérieur aux dates arrivee et depart.
     // si oui tester avec les dates du produit suivant, sachant que l'on ne recupere que les produits ayant la meme id_salle pour les tester dans la variable $control_date
 
-    for ($i = 0; $i < $nb_produit; $i++){
-        if(($date_arrivee < $control_date[$i]['date_arrivee'] && $date_depart < $control_date[$i]['date_arrivee'])
+    for ($i = 0; $i < $nb_produit; $i++) {
+        if (($date_arrivee < $control_date[$i]['date_arrivee'] && $date_depart < $control_date[$i]['date_arrivee'])
             || ($date_arrivee > $control_date[$i]['date_depart'] && $date_depart > $control_date[$i]['date_depart'])) {
-        }
-        else{
+        } else {
             $msg .= '<div class="alert alert-danger mt-3">Dates indisponibles pour créer un nouveau produit avec cette salle</div>';
         }
     }
@@ -91,33 +87,33 @@ if (
     // FONCTIONNE POUR EMPECHER LA CREATION DE NOUVEAU PRODUIT SUR DES DATES EXISTANTES , MAIS BLOQUE LA MODIFICATION DES DATES
 
     // condition pour que la date d'entrèe du formulaire soit supérieur à la date d'aujourd'hui
-    if ($date_arrivee < $today ) {
+    if ($date_arrivee < $today) {
         $msg .= '<div class="alert alert-danger mt-3">Attention votre date d\'arrivée est antérieur à la date actuelle !</div>';
     } else {
         if (empty($msg)) {
-        // preparation à l'enregistrement des variables en BDD
-        // conditions pour faire une modification du produit dans la base de donnée
-        if (!empty($_POST['id_salle'])) {
-            // si $id_salle n'est pas vide c'est un UPDATE
-            $enregistrement_produit = $pdo->prepare("UPDATE produit 
+            // preparation à l'enregistrement des variables en BDD
+            // conditions pour faire une modification du produit dans la base de donnée
+            if (!empty($_POST['mod_prod'])) {
+                // si $id_salle n'est pas vide c'est un UPDATE
+                $enregistrement_produit = $pdo->prepare("UPDATE produit 
                                                        SET date_arrivee = :date_arrivee,
                                                            date_depart = :date_depart,
                                                            id_salle = :id_salle,
                                                            prix = :prix,
                                                            etat = :etat                                                  
                                                         WHERE id_produit = :id_produit");
-            $enregistrement_produit->bindParam(":id_produit", $_POST['id_produit']);
-        } else {
-            $enregistrement_produit = $pdo->prepare("INSERT INTO produit (id_salle, date_arrivee, date_depart, prix, etat)
+                $enregistrement_produit->bindParam(":id_produit", $_POST['mod_prod']);
+            } else {
+                $enregistrement_produit = $pdo->prepare("INSERT INTO produit (id_salle, date_arrivee, date_depart, prix, etat)
                                                          VALUES (:id_salle, :date_arrivee, :date_depart, :prix, :etat)");
+            }
+            $enregistrement_produit->bindParam(":id_salle", $salle, PDO::PARAM_STR);
+            $enregistrement_produit->bindParam(":date_arrivee", $date_arrivee, PDO::PARAM_STR);
+            $enregistrement_produit->bindParam(":date_depart", $date_depart, PDO::PARAM_STR);
+            $enregistrement_produit->bindParam(":prix", $prix, PDO::PARAM_STR);
+            $enregistrement_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
+            $enregistrement_produit->execute();
         }
-        $enregistrement_produit->bindParam(":id_salle", $salle, PDO::PARAM_STR);
-        $enregistrement_produit->bindParam(":date_arrivee", $date_arrivee, PDO::PARAM_STR);
-        $enregistrement_produit->bindParam(":date_depart", $date_depart, PDO::PARAM_STR);
-        $enregistrement_produit->bindParam(":prix", $prix, PDO::PARAM_STR);
-        $enregistrement_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
-        $enregistrement_produit->execute();
-    }
     }
 }
 
@@ -178,6 +174,7 @@ while ($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
             <td colspan="7">
                 <form action="?enregistrer" method="POST" enctype="multipart/form-data">
                     <h1 class="text-center pt-5">Modifier votre produit</h1>
+                    <input type="hidden" name="mod_prod" value="<?php echo $_GET['id_produit']; ?>">
                     <p class="text-center"><a href="?action=annuler" class="btn btn-danger">Annuler votre
                             modification</a></p>
                     <div class="row p-3">
@@ -246,6 +243,7 @@ echo '</div>';
 vd($control_date);
 vd($nb_produit);
 vd($mod_prod);
+
 if (empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
     ?>
     <section>

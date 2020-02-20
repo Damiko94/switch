@@ -90,7 +90,7 @@ vd($_SESSION);
                 <p><b>Locatisation</b></p>
 
                 <iframe width="100%" height="auto" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                        src="https://maps.google.it/maps?q=<?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?>&output=embed"></iframe>
+                        src="https://maps.google.fr/maps?q=<?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?>&output=embed"></iframe>
             </div>
         </div>
         <hr>

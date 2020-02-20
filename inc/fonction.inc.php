@@ -12,14 +12,12 @@ function user_is_connect() {
 }
 
 // fonction pour savoir si l'utilisateur a le statut admin
-function user_is_admin() {
-    if(user_is_connect() && $_SESSION['membre']['statut'] == 2) {
+function user_is_admin()
+{
+    if (user_is_connect() && $_SESSION['membre']['statut'] == 2) {
         // si l'utilisateur est connecté et que son statut est égal à 2 alors il est admin
         return true;
     } else {
         return false;
     }
-}
-function control_date($a, $b) {
-
 }

@@ -25,9 +25,7 @@
                     </li>
 
                 <?php } else {
-                    if (!user_is_admin()) {
                         ?>
-
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo URL ?>acceuil.php">Acceuil</a>
                         </li>
@@ -37,13 +35,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo URL ?>connexion.php?action=deconnexion">Deconnexion</a>
                         </li>
-                    <?php } else { ?>
+                        <?php if (user_is_admin()) { ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo URL ?>admin/gestion_admin.php">Administration</a>
                         </li>
-
-                    <?php }
-                } ?>
+                        <?php
+                    } } ?>
             </ul>
         </div>
     </div>

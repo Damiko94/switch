@@ -319,7 +319,7 @@ if(empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] !=
     <section>
         <!-- formulaire d'ajout d'une salle -->
         <form action="" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_salle" value="<?php echo $id_salle; ?>">
+            <!-- <input type="hidden" name="id_salle" value="<?php echo $id_salle; ?>"> -->
             <h1 class="text-center pt-5">Gestion des salles</h1>
             <div class="row p-5">
                 <div class="col-6 p-5">

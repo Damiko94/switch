@@ -40,6 +40,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id
  ****************************************************************************
  **************************************************************************/
 
+if (isset($_GET['action']) && $_GET['action'] == 'modifier'){
+    $mod_prod = $_GET['id_produit'];
+    $salle = $_GET['id_salle'];
+    $date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit WHERE id_salle =$salle AND id_produit != $mod_prod");
+    $nb_produit = $date_produit->rowcount();
+    $control_date = $date_produit ->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // verification de l'existence de variables POST, si un formulaire a été validé
 
 if (
@@ -62,7 +70,7 @@ if (
 
     $date_produit = $pdo->query("SELECT date_arrivee, date_depart FROM produit WHERE id_salle = $salle");
     $nb_produit = $date_produit->rowcount();
-    $control_date = $date_produit ->fetchAll(PDO::FETCH_ASSOC);
+    $control_date = $date_produit->fetchAll(PDO::FETCH_ASSOC);
 
     // condition de date, tester si les dates d'arrivée et de départ sont inférieurs à la date d'arrivée et la date de départ enregistrer pour un produit
     // ou si elles sont supérieur aux dates arrivee et depart.
@@ -80,7 +88,7 @@ if (
      ************************** fin controle des date ******************************************
      *******************************************************************************************/
 
-    // FONCTIONNE POUR EMPECHER LA CR2ATION DE NOUVEAU PRODUIT SUR DES DATES EXISTANTES , MAIS BLOQUE LA MODIFICATION DES DATES
+    // FONCTIONNE POUR EMPECHER LA CREATION DE NOUVEAU PRODUIT SUR DES DATES EXISTANTES , MAIS BLOQUE LA MODIFICATION DES DATES
 
     // condition pour que la date d'entrèe du formulaire soit supérieur à la date d'aujourd'hui
     if ($date_arrivee < $today ) {
@@ -158,7 +166,7 @@ while ($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
     echo '<td>' . $produit['prix'] . '</td>';
     echo '<td>' . $produit['etat'] . '</td>';
     echo '<td>
-              <a href="?action=modifier&id_produit=' . $produit['id_produit'] . '" class="btn btn-warning"><i class="fas fa-pen-nib"></i></a>
+              <a href="?action=modifier&id_produit=' . $produit['id_produit'] . '&id_salle=' . $produit['id_salle'] . '" class="btn btn-warning"><i class="fas fa-pen-nib"></i></a>
               <a href="?action=supprimer&id_produit=' . $produit['id_produit'] . '" class="btn btn-danger" onclick="return(confirm(\'Etes-vous sûr ?\'))"><i class="fas fa-minus-square"></i></a>
           </td>';
 
@@ -237,6 +245,7 @@ echo '</div>';
 // controle de la recuperation des dates produits quand on enregistre une nouvelle salle
 vd($control_date);
 vd($nb_produit);
+vd($mod_prod);
 if (empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
     ?>
     <section>

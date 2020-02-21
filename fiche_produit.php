@@ -17,10 +17,11 @@ if (isset($_GET['id_produit'])) {
     $id_produit = $_GET['id_produit'];
 
     // recuperation des infos du produits pour l'affichage de la fiche produit
-    $infos_produit = $pdo->query("SELECT date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
+    $infos_produit = $pdo->query("SELECT produit.id_salle, date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
                                             FROM produit, salle
                                             WHERE produit.id_produit = $id_produit AND produit.id_salle= salle.id_salle");
     $infos = $infos_produit->fetchAll(PDO::FETCH_ASSOC);
+    $id_salle = $infos['id_salle'];
 }
 // recuperation des photos des salles pour l'affichage des autres produits
 $photo_salle = $pdo->query("SELECT photo FROM salle");
@@ -66,6 +67,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'reserver') {
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
 vd($_SESSION);
+vd($infos);
 
 ?>
     <section class="container">
@@ -121,7 +123,7 @@ vd($_SESSION);
         </div>
         <hr>
         <div class="row justify-content-between pb-3">
-            <a href="avis.php?id_produit=<?php $id_produit; ?>" class="btn-link">Déposer un commentaire et une note</a>
+            <a href="avis.php?&id_salle=<?php echo $infos[0]['id_salle']; ?>" class="btn-link">Déposer un commentaire et une note</a>
             <a href="acceuil.php" class="btn-link">Retour vers le catalogue</a>
         </div>
     </section>

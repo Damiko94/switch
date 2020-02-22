@@ -24,7 +24,7 @@ if (isset($_GET['id_produit'])) {
     $id_salle = $infos['id_salle'];
 }
 // recuperation des photos des salles pour l'affichage des autres produits
-$photo_salle = $pdo->query("SELECT photo FROM salle");
+$photo_salle = $pdo->query("SELECT photo FROM salle LIMIT 0, 4");
 
 /**************************************************************************
  * ************************************************************************
@@ -123,7 +123,11 @@ vd($infos);
         </div>
         <hr>
         <div class="row justify-content-between pb-3">
+            <?php if (user_is_connect()){ ?>
             <a href="avis.php?&id_salle=<?php echo $infos[0]['id_salle']; ?>" class="btn-link">Déposer un commentaire et une note</a>
+            <?php } else{ ?>
+            <a href="connexion.php" class="btn-link">Veuillez vous connecter pour deposez un avis</a>
+            <?php } ?>
             <a href="acceuil.php" class="btn-link">Retour vers le catalogue</a>
         </div>
     </section>

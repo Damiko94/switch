@@ -16,7 +16,9 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <?php if (!user_is_connect()) { ?>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URL ?>acceuil.php">Acceuil</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URL ?>inscription.php">Inscription</a>
                     </li>

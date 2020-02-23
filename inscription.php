@@ -33,7 +33,7 @@ if (
     $civilite = trim($_POST['civilite']);
 
     // vérification du pseudo, pour voir s'il ne contient pas de caracteres spéciaux grace à une regex
-    $verif_pseudo = preg_match('#^[a-zA-Z0-9._-]+$#', $pseudo);
+    $verif_pseudo = preg_match('#^[a-zA-Z0-9._-]{2,20}+$#', $pseudo);
     //  affichage d'un message d'erreur si le pseudo est vide ou contient des caracteres interdits
     if (!$verif_pseudo && !empty($pseudo)) {
         // cas d'erreur, caractere non autorisé
@@ -41,13 +41,13 @@ if (
     }
 
     // on répète l'opération de vérification pour le nom et le prenom
-    $verif_nom = preg_match('#^[a-zA-Z0-9._-]+$#', $nom);
+    $verif_nom = preg_match('#^[a-zA-Z0-9._-]{2,20}+$#', $nom);
     if (!$verif_nom && !empty($nom)) {
         // cas d'erreur, caractere non autorisé
         $msg .= '<div class="alert alert-danger mt-3">Le format de votre nom est invalide, caractères autorisés : a-z et de 0-9</div>';
     }
 
-    $verif_prenom = preg_match('#^[a-zA-Z0-9._-]+$#', $prenom);
+    $verif_prenom = preg_match('#^[a-zA-Z0-9._-]{2,20}+$#', $prenom);
     if (!$verif_prenom && !empty($prenom)) {
         // cas d'erreur, caractere non autorisé
         $msg .= '<div class="alert alert-danger mt-3">Le format de votre prenom est invalide, caractères autorisés : a-z et de 0-9</div>';

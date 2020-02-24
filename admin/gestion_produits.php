@@ -240,9 +240,9 @@ echo '</div>';
  *************************************************************************/
 
 // controle de la recuperation des dates produits quand on enregistre une nouvelle salle
-vd($control_date);
-vd($nb_produit);
-vd($mod_prod);
+// vd($control_date);
+// vd($nb_produit);
+// vd($mod_prod);
 
 if (empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
     ?>

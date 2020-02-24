@@ -5,6 +5,19 @@ include 'inc/fonction.inc.php';
 // recupération des produits pour affichage sur la page d'acceuil
 $liste_produits = $pdo->query("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle WHERE produit.id_salle = salle.id_salle");
 
+// nouvelle requete pour appliquer les filtres sur la page d'acceuil
+
+/*
+$liste_prod_filtre = $pdo->prepare("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo 
+                                              FROM produit, salle 
+                                              WHERE produit.id_salle = salle.id_salle
+                                              AND categorie = :categorie
+                                              AND ville = :ville
+                                              AND capacite > :capacite
+                                              AND prix <= :prix
+                                              AND date_arrivee < :date_arrivee
+                                              AND date_depart > :date_depart");
+*/
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
 ?>

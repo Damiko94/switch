@@ -5,9 +5,33 @@ include 'inc/fonction.inc.php';
 // recupération des produits pour affichage sur la page d'acceuil
 $liste_produits = $pdo->query("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle WHERE produit.id_salle = salle.id_salle");
 
+
+/******************************************************************************
+ ******************************************************************************
+ ********** FILTRAGE DE L'AFFICHAGE DES PRODUITS VIA UN FORMULAIRE ************
+ ******************************************************************************
+ *****************************************************************************/
+
+// création de variables vides pour receuillir les données du formulaire
+$categorie = '';
+$ville = '';
+$capacite = '';
+$prix = '';
+$date_arrivee = '';
+$date_depart = '';
+
+// recuperation des données du formulaire et enregaistrements dans des variables
+if (isset($_POST) && !empty($_POST)){
+    $categorie = $_POST['categorie'];
+    $ville = $_POST['ville'];
+    $capacite = $_POST['capacite'];
+    $prix = $_POST['prix'];
+    $date_arrivee = $_POST['date_arrivee'];
+    $date_depart = $_POST['date_depart'];
+}
+
 // nouvelle requete pour appliquer les filtres sur la page d'acceuil
 
-/*
 $liste_prod_filtre = $pdo->prepare("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo 
                                               FROM produit, salle 
                                               WHERE produit.id_salle = salle.id_salle
@@ -17,71 +41,106 @@ $liste_prod_filtre = $pdo->prepare("SELECT id_produit, prix, date_arrivee, date_
                                               AND prix <= :prix
                                               AND date_arrivee < :date_arrivee
                                               AND date_depart > :date_depart");
-*/
+$liste_prod_filtre->bindParam(":categorie", $categorie,PDO::FETCH_ASSOC);
+$liste_prod_filtre->bindParam(":ville", $ville,PDO::FETCH_ASSOC);
+$liste_prod_filtre->bindParam(":capacite", $capacite,PDO::FETCH_ASSOC);
+$liste_prod_filtre->bindParam(":prix", $prix,PDO::FETCH_ASSOC);
+$liste_prod_filtre->bindParam(":date_arrivee", $date_arrivee,PDO::FETCH_ASSOC);
+$liste_prod_filtre->bindParam(":date_depart", $date_depart,PDO::FETCH_ASSOC);
+$liste_prod_filtre->execute();
+
+/******************************************************************************
+ ******************************************************************************
+ ***************************** FIN DU FILTRAGE ********************************
+ ******************************************************************************
+ *****************************************************************************/
+
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
+
+vd($_POST);
 ?>
 
-<div class="row">
-    <aside class="col-2" style="background-color: #9fcdff;">
-        <section>
-            <h4>Catégorie</h4>
-            <div class="list-group">
-                <a href="?categorie=reunion" class="list-group-item">Réunion</a>
-                <a href="?categorie=bureau" class="list-group-item">Bureau</a>
-                <a href="?categorie=formation" class="list-group-item">Formation</a>
-            </div>
-        </section>
-        <section>
-            <h4>Ville</h4>
-            <div class="list-group">
-                <a href="?ville=paris" class="list-group-item">Paris</a>
-                <a href="?ville=lyon" class="list-group-item">Lyon</a>
-                <a href="?ville=bordeaux" class="list-group-item">Bordeaux</a>
-            </div>
-        </section>
-        <section class="border border-dark mt-3 p-2">
-            <form action="" method="post">
-                <h4>Capacité</h4>
-                <select>
-                    <option>10</option>
-                    <option>20</option>
-                    <option>50</option>
-                    <option>100</option>
-                </select>
-                <h4>Prix</h4>
-                <input type="range" name="prix">
-            <h4>Période</h4>
-                <label for="date_arrivee">Date d'arrivée : </label>
-                <input type="date" name="date_arrivee">
-                <label for="date_depart">Date de départ : </label>
-                <input type="date" name="date_depart">
-                <button type="submit" class="btn btn-primary">Soumettre vos critères</button>
+    <div class="row">
+        <aside class="col-2" style="background-color: #9fcdff;">
+            <form method="post" action="#">
+                <div class="form-group">
+                    <label for="categorie">Categorie</label>
+                    <select name="categorie" class="form-control">
+                        <option>Réunion</option>
+                        <option>Bureau</option>
+                        <option>Formation</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ville">Ville</label>
+                    <select class="form-control" name="ville">
+                        <option>Paris</option>
+                        <option>Lyon</option>
+                        <option>Marseille</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="capacite">Capacité</label>
+                    <input type="number" name="capacite" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="prix"><b>Prix</b></label>
+                    <input type="range" name="prix" min="0" max="1500" step="50" onchange="updateTextInput(this.value);" class="form-control">
+                    maximum :<input type="text" id="textInput" value="" class="w-50"> €
+                </div>
+                <p><b>Période</b></p>
+                <div class="form-group">
+                    <label for="date_arrivee">Date d'arrivée</label>
+                    <input type="date" name="date_arrivee" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="date_depart">Date de départ</label>
+                    <input type="date" name="date_depart" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="form-control btn btn-dark">Rechercher</button>
+                </div>
             </form>
-        </section>
-        <div>
-            <p>résultats</p>
-        </div>
-    </aside>
+            <div>
+                <p>résultats</p>
+            </div>
+        </aside>
 
-    <div class="col-10">
-        <div class="row justify-content-center">
-            <?php
-            while($produits = $liste_produits->fetch(PDO::FETCH_ASSOC)) {
+        <div class="col-10">
+            <div class="row justify-content-center">
+                <?php
+                if (isset($_POST) && !empty($_POST)){
+                while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC)){
+                    echo '<div class="col-3 text-center m-1 border rounded border-primary">';
+                    echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
+                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
+                    echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
+                    echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
+                    echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
+                    echo '</div>';
+                } }else {
+                while ($produits = $liste_produits->fetch(PDO::FETCH_ASSOC)) {
 
-                echo '<div class="col-3 text-center m-1 border rounded border-primary">';
-                echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
-                echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
-                echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
-                echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
-                echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
-                echo '</div>';
-            }
-            ?>
+                    echo '<div class="col-3 text-center m-1 border rounded border-primary">';
+                    echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
+                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
+                    echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
+                    echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
+                    echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
+                    echo '</div>';
+                }}
+                ?>
+            </div>
         </div>
+
     </div>
-
-</div>
+<script>
+    function updateTextInput(val) {
+        document.getElementById('textInput').value=val;
+    }
+</script>
 
 <?php
 

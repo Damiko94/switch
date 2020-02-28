@@ -6,7 +6,7 @@
                 <a class="nav-link" href="#">Qui sommes nous?</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="#">Contact</a>
+                <a class="nav-link" href="contact.php">Contact</a>
             </li>
         </ul>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"

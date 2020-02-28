@@ -2,6 +2,7 @@
 include 'inc/init.inc.php';
 include 'inc/fonction.inc.php';
 
+    $succes = '';
 // MISE EN PLACE DE L'ENREGISTREMENT DE L'AVIS DANS LA BDD
 if (isset($_POST['commentaire']) && isset($_POST['note']) && isset($_GET['id_salle'])) {
     $id_membre = $_SESSION['membre']['id_membre'];
@@ -32,6 +33,7 @@ if (isset($_POST['commentaire']) && isset($_POST['note']) && isset($_GET['id_sal
         $enregistrement_avis->bindParam(":commentaire", $commentaire, PDO::FETCH_ASSOC);
         $enregistrement_avis->bindParam(":note", $note, PDO::FETCH_ASSOC);
         $enregistrement_avis->execute();
+        $succes = '<div class="alert-info">Votre avis à bien été enregsitré, merci beaucoup pour votre impression.</div>';
     }
 }
 
@@ -42,7 +44,10 @@ include 'inc/nav.inc.php';
 
     <section class="container" style="height: 600px;  ">
         <h2 class="text-center">Donnez nous votre avis sur cette salle.</h2>
-        <?php echo $msg; ?>
+        <?php
+        echo $msg;
+        echo $succes;
+        ?>
         <form action="" method="post">
             <div class="form-group">
                 <label for="commentaire"><b>Laissez nous un commentaire</b></label>

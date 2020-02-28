@@ -21,7 +21,7 @@ if (isset($_GET['id_produit'])) {
                                             FROM produit, salle
                                             WHERE produit.id_produit = $id_produit AND produit.id_salle= salle.id_salle");
     $infos = $infos_produit->fetchAll(PDO::FETCH_ASSOC);
-    $id_salle = $infos['id_salle'];
+    $id_salle = $infos[0]['id_salle'];
 }
 // recuperation des photos des salles pour l'affichage des autres produits
 $photo_salle = $pdo->query("SELECT photo FROM salle LIMIT 0, 4");

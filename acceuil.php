@@ -38,9 +38,9 @@ $liste_prod_filtre = $pdo->prepare("SELECT id_produit, prix, date_arrivee, date_
                                               AND categorie = :categorie
                                               AND ville = :ville
                                               AND capacite > :capacite
-                                              AND prix <= :prix
-                                              AND date_arrivee < :date_arrivee
-                                              AND date_depart > :date_depart");
+                                              AND prix < :prix
+                                              AND date_arrivee >= :date_arrivee
+                                              AND date_depart <= :date_depart");
 $liste_prod_filtre->bindParam(":categorie", $categorie,PDO::FETCH_ASSOC);
 $liste_prod_filtre->bindParam(":ville", $ville,PDO::FETCH_ASSOC);
 $liste_prod_filtre->bindParam(":capacite", $capacite,PDO::FETCH_ASSOC);
@@ -115,7 +115,7 @@ vd($_POST);
                 while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC)){
                     echo '<div class="col-3 text-center m-1 border rounded border-primary">';
                     echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
-                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
+                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '€</p>';
                     echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
                     echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
                     echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
@@ -125,7 +125,7 @@ vd($_POST);
 
                     echo '<div class="col-3 text-center m-1 border rounded border-primary">';
                     echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
-                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
+                    echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '€</p>';
                     echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
                     echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
                     echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';

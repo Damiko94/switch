@@ -74,6 +74,7 @@ include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
 
 vd($_POST);
+vd($_SESSION);
 ?>
 
     <div class="row">

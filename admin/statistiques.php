@@ -8,10 +8,11 @@ include '../inc/fonction.inc.php';
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$notes_salle = $pdo->query("SELECT AVG(note), id_salle 
-                                      FROM avis 
-                                      GROUP BY id_salle 
-                                      ORDER BY AVG(note) DESC 
+$notes_salle = $pdo->query("SELECT titre, AVG(note) AS NOTE
+                                      FROM salle, avis
+                                      WHERE salle.id_salle = avis.id_salle 
+                                      GROUP BY salle.id_salle 
+                                      ORDER BY NOTE DESC 
                                       LIMIT 5");
 $notes = $notes_salle->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,9 +43,10 @@ $commande = $commandes_salle->fetchAll(PDO::FETCH_ASSOC);
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$membre_salle =$pdo->query("SELECT id_membre, COUNT(*) AS MEMBRECOUNT 
-                                      FROM commande 
-                                      GROUP BY id_membre 
+$membre_salle = $pdo->query("SELECT COUNT(commande.id_membre) AS MEMBRECOUNT, prenom, nom 
+                                      FROM commande, membre
+                                      WHERE commande.id_membre = membre.id_membre 
+                                      GROUP BY commande.id_membre 
                                       ORDER BY MEMBRECOUNT DESC 
                                       LIMIT 5");
 $membre_quantite = $membre_salle->fetchAll(PDO::FETCH_ASSOC);
@@ -61,10 +63,11 @@ $membre_quantite = $membre_salle->fetchAll(PDO::FETCH_ASSOC);
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$membre_depense =$pdo->query("SELECT id_membre, SUM(prix) AS TOTAL 
-                                        FROM commande, produit 
-                                        WHERE commande.id_produit = produit.id_produit
-                                        GROUP BY id_membre
+$membre_depense = $pdo->query("SELECT prenom, nom, SUM(produit.prix) AS TOTAL
+                                        FROM membre, commande, produit 
+                                        WHERE membre.id_membre = commande.id_membre
+                                        AND commande.id_produit = produit.id_produit
+                                        GROUP BY commande.id_membre
                                         ORDER BY TOTAL DESC 
                                         LIMIT 5");
 $depense = $membre_depense->fetchAll(PDO::FETCH_ASSOC);
@@ -82,23 +85,54 @@ vd($depense);
 
     <section>
         <p>
-        <a href="?action=note">Top 5 des salles les mieux notées</a>
+            <a href="?action=note">Top 5 des salles les mieux notées</a>
         </p>
         <p>
-        <a href="?action=commande">Top 5 des salles les plus commandées</a>
+            <a href="?action=commande">Top 5 des salles les plus commandées</a>
         </p>
         <p>
-        <a href="?action=quantite">Top 5 des membres qui achetent le plus (quantité)</a>
+            <a href="?action=quantite">Top 5 des membres qui achetent le plus (quantité)</a>
         </p>
         <p>
-        <a href="?action=prix">Top 5 des membres qui achhètent le plus en prix</a>
+            <a href="?action=prix">Top 5 des membres qui achhètent le plus en prix</a>
         </p>
     </section>
-    <div>
+    <div class="container justify-content-center">
         <?php
-        
-        for ($i = 0; $i < 5; $i++){
-            echo '<p>' . ($i+1) . '</p>' ;
+        if (isset($_GET['action']) && $_GET['action'] == 'note') {
+            for ($i = 0; $i < 5; $i++) {
+                echo '<div class="row w-50 mx-auto justify-content-between my-2">
+                    <p>' . ($i + 1) . ' - ' . $notes[$i]['titre'] . '</p>
+                    <button type="none" class="btn btn-primary">' . $notes[$i]['NOTE'] . ' </button>
+                  </div>';
+            }
+        }
+
+        if (isset($_GET['action']) && $_GET['action'] == 'commande') {
+            for ($i = 0; $i < 5; $i++) {
+                echo '<div class="row w-50 mx-auto justify-content-between my-2">
+                    <p>' . ($i + 1) . ' - ' . $commande[$i]['titre'] . '</p>
+                    <button type="none" class="btn btn-primary">' . $commande[$i]['TITRECOUNT'] . ' </button>
+                  </div>';
+            }
+        }
+
+        if (isset($_GET['action']) && $_GET['action'] == 'quantite') {
+            for ($i = 0; $i < 5; $i++) {
+                echo '<div class="row w-50 mx-auto justify-content-between my-2">
+                    <p>' . ($i + 1) . ' - ' . $membre_quantite[$i]['prenom'] . ' ' . $membre_quantite[$i]['nom'] . '</p>
+                    <button type="none" class="btn btn-primary">' . $membre_quantite[$i]['MEMBRECOUNT'] . ' </button>
+                  </div>';
+            }
+        }
+
+        if (isset($_GET['action']) && $_GET['action'] == 'prix') {
+            for ($i = 0; $i < 5; $i++) {
+                echo '<div class="row w-50 mx-auto justify-content-between my-2">
+                    <p>' . ($i + 1) . ' - ' . $depense[$i]['prenom'] . ' ' . $depense[$i]['nom'] . '</p>
+                    <button type="none" class="btn btn-primary">' . $depense[$i]['TOTAL'] . ' €</button>
+                  </div>';
+            }
         }
         ?>
     </div>

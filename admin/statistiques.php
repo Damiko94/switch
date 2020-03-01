@@ -8,7 +8,11 @@ include '../inc/fonction.inc.php';
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$notes_salle = $pdo->query("SELECT AVG(note), id_salle FROM avis GROUP BY id_salle ORDER BY AVG(note) DESC LIMIT 5");
+$notes_salle = $pdo->query("SELECT AVG(note), id_salle 
+                                      FROM avis 
+                                      GROUP BY id_salle 
+                                      ORDER BY AVG(note) DESC 
+                                      LIMIT 5");
 $notes = $notes_salle->fetchAll(PDO::FETCH_ASSOC);
 
 /**********************************************************************************************************************
@@ -17,34 +21,86 @@ $notes = $notes_salle->fetchAll(PDO::FETCH_ASSOC);
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
+
 /**********************************************************************************************************************
  * ********************************************************************************************************************
  * *********** RECUPERATION DES SALLES LES PLUS COMMANDEES PAR ORDRE CROISSANT DANS LA LIMITE DE 5 SALLES *************
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$commandes_salle = $pdo->query("SELECT titre FROM commande, produit, salle WHERE commande.id_produit = produit.id_produit AND produit.id_salle = salle.id_salle GROUP BY titre");
+$commandes_salle = $pdo->query("SELECT titre, COUNT(*) AS TITRECOUNT FROM commande, produit, salle
+                                          WHERE commande.id_produit = produit.id_produit 
+                                          AND produit.id_salle = salle.id_salle 
+                                          GROUP BY titre 
+                                          ORDER BY TITRECOUNT DESC 
+                                          LIMIT 5");
 $commande = $commandes_salle->fetchAll(PDO::FETCH_ASSOC);
 
 /**********************************************************************************************************************
  * ********************************************************************************************************************
- * ************** FIN DES SALLES LES PLUS COMMANDEES PAR ORDRE CROISSANT DANS LA LIMITE DE 5 SALLES *******************
+ * ************ LES MEMBRES QUI COMMANDE LE PLUS DE SALLE PAR ORDRE CROISSANT DANS LA LIMITE DE 5 SALLES **************
  * ********************************************************************************************************************
  *********************************************************************************************************************/
+
+$membre_salle =$pdo->query("SELECT id_membre, COUNT(*) AS MEMBRECOUNT 
+                                      FROM commande 
+                                      GROUP BY id_membre 
+                                      ORDER BY MEMBRECOUNT DESC 
+                                      LIMIT 5");
+$membre_quantite = $membre_salle->fetchAll(PDO::FETCH_ASSOC);
+
+/**********************************************************************************************************************
+ * ********************************************************************************************************************
+ * ******************************* FIN DES MEMBRES QUI COMMANDE LE PLUS DE SALLES *************************************
+ * ********************************************************************************************************************
+ *********************************************************************************************************************/
+
+/**********************************************************************************************************************
+ * ********************************************************************************************************************
+ * ********************************* LES MEMBRES QUI DEPENSENT LE PLUS EN COMMANDE ************************************
+ * ********************************************************************************************************************
+ *********************************************************************************************************************/
+
+$membre_depense =$pdo->query("SELECT id_membre, SUM(prix) AS TOTAL 
+                                        FROM commande, produit 
+                                        WHERE commande.id_produit = produit.id_produit
+                                        GROUP BY id_membre
+                                        ORDER BY TOTAL DESC 
+                                        LIMIT 5");
+$depense = $membre_depense->fetchAll(PDO::FETCH_ASSOC);
+/**********************************************************************************************************************
+ * ********************************************************************************************************************
+ * ******************************** FIN DES MEMBRES QUI DEPENSENT LE PLUS EN COMMANDE *********************************
+ * ********************************************************************************************************************
+ *********************************************************************************************************************/
+
 include '../inc/header.inc.php';
 include '../inc/nav.inc.php';
-vd($commande);
+vd($depense);
 
 ?>
 
     <section>
-        <p>Top 5 des salles les mieux notées</p>
-        <p>Top 5 des salles les plus commandées</p>
-        <p>Top 5 des membres qui achetent le plus (quantité)</p>
-        <p>Top 5 des membres qui achhètent le plus en prix</p>
+        <p>
+        <a href="?action=note">Top 5 des salles les mieux notées</a>
+        </p>
+        <p>
+        <a href="?action=commande">Top 5 des salles les plus commandées</a>
+        </p>
+        <p>
+        <a href="?action=quantite">Top 5 des membres qui achetent le plus (quantité)</a>
+        </p>
+        <p>
+        <a href="?action=prix">Top 5 des membres qui achhètent le plus en prix</a>
+        </p>
     </section>
     <div>
-
+        <?php
+        
+        for ($i = 0; $i < 5; $i++){
+            echo '<p>' . ($i+1) . '</p>' ;
+        }
+        ?>
     </div>
 
 <?php

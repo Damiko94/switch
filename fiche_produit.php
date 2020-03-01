@@ -17,9 +17,11 @@ if (isset($_GET['id_produit'])) {
     $id_produit = $_GET['id_produit'];
 
     // recuperation des infos du produits pour l'affichage de la fiche produit
-    $infos_produit = $pdo->query("SELECT produit.id_salle, date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
-                                            FROM produit, salle
-                                            WHERE produit.id_produit = $id_produit AND produit.id_salle= salle.id_salle");
+    $infos_produit = $pdo->query("SELECT AVG(avis.note) AS NOTE, produit.id_salle, date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
+                                            FROM avis, produit, salle
+                                            WHERE avis.id_salle = salle.id_salle 
+                                            AND produit.id_produit = $id_produit 
+                                            AND produit.id_salle= salle.id_salle");
     $infos = $infos_produit->fetchAll(PDO::FETCH_ASSOC);
     $id_salle = $infos[0]['id_salle'];
 }
@@ -76,7 +78,7 @@ vd($infos);
         echo $commande_enregistre;
         ?>
         <div class="row justify-content-between pt-3">
-            <div class="col-3"><?php echo $infos[0]['titre']; ?></div>
+            <div class="col-3"><?php echo '<b>' . $infos[0]['titre'] . '</b>, note moyenne: ' . $infos[0]['NOTE']; ?></div>
             <div class="col-3"><a href="?action=reserver&id_produit=<?php echo $id_produit; ?>">
                     <button type="button">Réserver</button>
                 </a></div>

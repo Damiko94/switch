@@ -135,7 +135,7 @@ vd($_SESSION);
                         echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
                         echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
                         echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
-                        echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
+                        echo '<div><p>note moyenne : ' . $produits['NOTE'] . '</p><a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a></div>';
                         echo '</div>';
                     }
                 } else {
@@ -146,7 +146,7 @@ vd($_SESSION);
                         echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
                         echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
                         echo '<p><i class="far fa-calendar-alt"></i>' . $produits['date_arrivee'] . ' au ' . $produits['date_depart'] . '</p>';
-                        echo '<a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a>';
+                        echo '<div><p>note moyenne : ' . $produits['NOTE'] . '</p><a href="fiche_produit.php?id_produit=' . $produits['id_produit'] . '" class="btn btn-primary"><i class="fas fa-search">Voir</i></a></div>';
                         echo '</div>';
                     }
                 }

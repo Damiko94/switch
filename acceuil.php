@@ -4,18 +4,26 @@ include 'inc/fonction.inc.php';
 
 // recupération des produits pour affichage sur la page d'acceuil
 if (isset($_GET['action']) && $_GET['action'] == 'plus') {
-    $liste_produits = $pdo->query("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle 
+    $liste_produits = $pdo->query("SELECT id_produit, produit.id_salle, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle 
                                          WHERE produit.id_salle = salle.id_salle 
                                          AND etat = 'libre'
                                          AND date_arrivee >= NOW()");
 } else {
-    $liste_produits = $pdo->query("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle 
+    $liste_produits = $pdo->query("SELECT id_produit, produit.id_salle, prix, date_arrivee, date_depart, titre, description, photo FROM produit, salle 
                                          WHERE produit.id_salle = salle.id_salle 
                                          AND etat = 'libre'
                                          AND date_arrivee >= NOW()
                                          LIMIT 0,6");
 }
 
+/**************************************************************************
+ * ************************************************************************
+ * ************* recuperation des notes de la table avis ******************
+ * ************************************************************************
+ *************************************************************************/
+
+
+// $note = $note_salle->fetchAll(PDO::FETCH_ASSOC);
 
 /******************************************************************************
  ******************************************************************************
@@ -43,7 +51,7 @@ if (isset($_POST) && !empty($_POST)) {
 
 // nouvelle requete pour appliquer les filtres sur la page d'acceuil
 
-    $liste_prod_filtre = $pdo->prepare("SELECT id_produit, prix, date_arrivee, date_depart, titre, description, photo 
+    $liste_prod_filtre = $pdo->prepare("SELECT id_produit, produit.id_salle, prix, date_arrivee, date_depart, titre, description, photo 
                                               FROM produit, salle 
                                               WHERE produit.id_salle = salle.id_salle
                                               AND categorie = :categorie
@@ -74,6 +82,8 @@ include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
 
 vd($_POST);
+vd($_SESSION);
+// vd($note);
 ?>
 
     <div class="row">
@@ -128,8 +138,22 @@ vd($_POST);
             <div class="row justify-content-center">
                 <?php
                 if (isset($_POST) && !empty($_POST)) {
-                    while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC)) {
+                    while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC) && $note = $note_salle->fetch(PDO::FETCH_ASSOC)) {
+
                         echo '<div class="col-3 text-center m-1 border rounded border-primary">';
+
+                        // recuperation de l'id salle dans une variable,
+                        // pour la requete de la note dans la table avis
+                        $id_salle = $produits['id_salle'];
+
+                        // requete pour recuperer les notes dans la table avis
+                        $note_salle = $pdo->prepare("SELECT AVG(note) AS NOTE, id_salle FROM avis WHERE id_salle = :id_salle GROUP BY id_salle");
+                        $note_salle->bindParam(":id_salle", $id_salle, PDO::FETCH_ASSOC);
+                        $note_salle->execute();
+                        while ($note = $note_salle->fetch(PDO::FETCH_ASSOC)) {
+                            echo '<p>notes moyennes: ' . $note['NOTE'] . '</p>';
+                        }
+
                         echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
                         echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
                         echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';
@@ -141,6 +165,19 @@ vd($_POST);
                     while ($produits = $liste_produits->fetch(PDO::FETCH_ASSOC)) {
 
                         echo '<div class="col-3 text-center m-1 border rounded border-primary">';
+
+                        // recuperation de l'id salle dans une variable,
+                        // pour la requete de la note dans la table avis
+                        $id_salle = $produits['id_salle'];
+
+                        // requete pour recuperer les notes dans la table avis
+                        $note_salle = $pdo->prepare("SELECT AVG(note) AS NOTE, id_salle FROM avis WHERE id_salle = :id_salle GROUP BY id_salle");
+                        $note_salle->bindParam(":id_salle", $id_salle, PDO::FETCH_ASSOC);
+                        $note_salle->execute();
+                        while ($note = $note_salle->fetch(PDO::FETCH_ASSOC)) {
+                            echo '<p>notes moyennes: ' . $note['NOTE'] . '</p>';
+                        }
+
                         echo '<div><img src="' . URL . 'img/' . $produits['photo'] . '" class="img-thumbnail" width="100%"></div>';
                         echo '<p>' . $produits['titre'] . ' : ' . $produits['prix'] . '</p>';
                         echo '<p style="overflow: hidden">' . $produits['description'] . '</p>';

@@ -28,6 +28,9 @@ if (isset($_SESSION)) {
                 </li><li class="nav-item">
                     <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
                 </li>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+                </li>
             </ul>
         </aside>
         <section class="col-10">

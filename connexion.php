@@ -2,9 +2,10 @@
 include 'inc/init.inc.php';
 include 'inc/fonction.inc.php';
 
-// déconnexion
+// deconnexion
 if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
     session_destroy();
+    header('location:' . URL . 'acceuil.php');
 }
 
 include 'inc/header.inc.php';
@@ -57,7 +58,7 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
         <h1>Identifiez vous s'il vous plait</h1>
             <p><?php echo $msg; ?></p>
         </div>
-        <form action="" method="post">
+        <form action="#" method="post">
             <div class="form-group">
                 <label for="pseudo">Votre pseudo</label>
                 <input type="text" name="pseudo" class="form-control">

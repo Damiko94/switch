@@ -77,7 +77,7 @@ if (
         if (($date_arrivee < $control_date[$i]['date_arrivee'] && $date_depart < $control_date[$i]['date_arrivee'])
             || ($date_arrivee > $control_date[$i]['date_depart'] && $date_depart > $control_date[$i]['date_depart'])) {
         } else {
-            $msg .= '<div class="alert alert-danger mt-3">Dates indisponibles pour créer un nouveau produit avec cette salle</div>';
+            $msg = '<div class="alert alert-danger mt-3">Dates indisponibles pour créer un nouveau produit avec cette salle</div>';
         }
     }
     /*******************************************************************************************
@@ -88,7 +88,7 @@ if (
 
     // condition pour que la date d'entrèe du formulaire soit supérieur à la date d'aujourd'hui
     if ($date_arrivee < $today) {
-        $msg .= '<div class="alert alert-danger mt-3">Attention votre date d\'arrivée est antérieur à la date actuelle !</div>';
+        $msg = '<div class="alert alert-danger mt-3">Attention votre date d\'arrivée est antérieur à la date actuelle !</div>';
     } else {
         if (empty($msg)) {
             // preparation à l'enregistrement des variables en BDD

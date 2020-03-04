@@ -138,7 +138,7 @@ vd($_SESSION);
             <div class="row justify-content-center">
                 <?php
                 if (isset($_POST) && !empty($_POST)) {
-                    while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC) && $note = $note_salle->fetch(PDO::FETCH_ASSOC)) {
+                    while ($produits = $liste_prod_filtre->fetch(PDO::FETCH_ASSOC)) {
 
                         echo '<div class="col-3 text-center m-1 border rounded border-primary">';
 

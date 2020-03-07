@@ -74,11 +74,6 @@ while ($avis = $liste_avis->fetch(PDO::FETCH_ASSOC)):
     </div>
 
 
-
-
-
-
-
 <?php
 
     include '../inc/footer.inc.php';

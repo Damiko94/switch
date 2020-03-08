@@ -5,7 +5,7 @@ include 'inc/fonction.inc.php';
 // deconnexion
 if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
     session_destroy();
-    header('location:' . URL . 'accueil.php');
+    header('location:' . URL . 'index.php');
 }
 
 include 'inc/header.inc.php';
@@ -43,7 +43,7 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
             if (user_is_admin()){
                 header('location:' . URL . 'admin/gestion_admin.php');
             }else{
-                header('location:' . URL . 'accueil.php');
+                header('location:' . URL . 'index.php');
             }
         } else {
             $msg .= '<div class="alert alert-danger mt-3">Erreur sur le pseudo et / ou le mot de passe</div>';

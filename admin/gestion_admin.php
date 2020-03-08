@@ -10,7 +10,7 @@ if (!user_is_admin()) {
 include '../inc/header.inc.php';
 include '../inc/nav.inc.php';
 if (isset($_SESSION)) {
-    vd($_SESSION);
+    // vd($_SESSION);
 }
 ?>
     <div class="row">

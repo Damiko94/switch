@@ -110,11 +110,35 @@ include '../inc/nav.inc.php';
  ************** AFFICHAGE DES MEMBRES POUR LA GESTION ADMIN ****************
  **************************************************************************
  *************************************************************************/
+?>
+<div class="row">
+
+    <aside class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+            </li>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+            </li>
+        </ul>
+    </aside>
+
+<?php
 
 // récupération des infos dans la table membre
 $liste_membre = $pdo->query("SELECT * FROM membre");
 
-echo '<div class="table-responsive">';
+echo '<div class="col-10 table-responsive">';
 echo '<table class="table table-bordered">';
 echo '<tr>';
 echo '<th>Id membre</th>';
@@ -211,61 +235,8 @@ echo '</div>';
  *********** FIN AFFICHAGE DES MEMBRES POUR LA GESTION ADMIN ***************
  **************************************************************************
  *************************************************************************/
+?>
+</div>
+<?php
 
-
-vd($_POST);
-vd($date_enregistrement);
-if(empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {
-    ?>
-    <section>
-        <form action="" method="POST">
-            <h1 class="text-center pt-5">Gestion des membres</h1>
-            <div class="row p-5">
-                <div class="col-6 p-5">
-                    <div class="form-group">
-                        <label for="pseudo">Pseudo</label>
-                        <input type="text" id="pseudo" name="pseudo" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="mdp">Mot de passe</label>
-                        <input type="password" id="mdp" name="mdp" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" id="nom" name="nom" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="prenom">Prénom</label>
-                        <input type="text" id="prenom" name="prenom" class="form-control">
-                    </div>
-                </div>
-                <div class="col-6 p-5">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="civilite">Civilité</label>
-                        <select name="civilite" id="civilite" class="form-control">
-                            <option>Homme</option>
-                            <option>Femme</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="statut">Civilité</label>
-                        <select name="statut" id="statut" class="form-control">
-                            <option>Admin</option>
-                            <option>Membre</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" name="enregistrement" id="enregistrement"
-                                class="btn btn-primary"> Enregistrer </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </section>
-    <?php
-}
 include '../inc/footer.inc.php';

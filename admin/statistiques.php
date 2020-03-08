@@ -79,11 +79,32 @@ $depense = $membre_depense->fetchAll(PDO::FETCH_ASSOC);
 
 include '../inc/header.inc.php';
 include '../inc/nav.inc.php';
-vd($depense);
+// vd($depense);
 
 ?>
+<div class="row">
 
-    <section>
+    <aside class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+            </li>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+            </li>
+        </ul>
+    </aside>
+
+    <section class="col-10">
         <p>
             <a href="?action=note">Top 5 des salles les mieux notées</a>
         </p>
@@ -136,6 +157,7 @@ vd($depense);
         }
         ?>
     </div>
+</div>
 
 <?php
 

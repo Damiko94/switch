@@ -42,7 +42,27 @@ $liste_avis = $pdo->query("SELECT avis.*, membre.email, salle.titre
     **************************************************************************
     *************************************************************************/
 ?>
-    <div class=" container table-responsive">
+<div class="row">
+    <aside class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+            </li>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+            </li>
+        </ul>
+    </aside>
+    <div class="col-10 container table-responsive">
     <table class="table table-bordered">
     <tr>
         <th>id avis</th>
@@ -73,6 +93,7 @@ while ($avis = $liste_avis->fetch(PDO::FETCH_ASSOC)):
     </table>
     </div>
 
+</div>
 
 <?php
 

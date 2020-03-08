@@ -186,10 +186,33 @@ include '../inc/nav.inc.php';
  ************** AFFICHAGE DES SALLES POUR LA GESTION ADMIN ****************
  **************************************************************************
  *************************************************************************/
+?>
 
+<div class="row">
+
+<aside class="col-2">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+                </li>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+                </li>
+            </ul>
+        </aside>
+<?php
 $liste_salle = $pdo->query("SELECT * FROM salle");
 
-echo '<div class="table-responsive">';
+echo '<div class="col-10 table-responsive">';
 
 echo '<table class="table table-bordered">';
 echo '<tr>';
@@ -308,9 +331,10 @@ echo '</div>';
  *********** FIN AFFICHAGE DES SALLES POUR LA GESTION ADMIN ***************
  **************************************************************************
  *************************************************************************/
-
-
-vd($_POST);
+?>
+</div>
+<?php
+// vd($_POST);
 // vd($photo_bdd);
 
 // cacher le formulaire d'ajout d'une salle quand le formulaire de modification des salles aparait

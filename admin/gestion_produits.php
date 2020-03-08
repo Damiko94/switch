@@ -140,7 +140,32 @@ $infos_salle = $pdo->query("SELECT id_salle, titre, ville, adresse, cp, capacite
 // récupération des infos dans la table produit
 $liste_produit = $pdo->query("SELECT * FROM produit");
 
-echo '<div class="table-responsive">';
+?>
+<div class="row">
+
+    <aside class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+            </li>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+            </li>
+        </ul>
+    </aside>
+
+<?php
+
+echo '<div class="col-10 table-responsive">';
 echo '<table class="table table-bordered">';
 echo '<tr>';
 echo '<th>Id produit</th>';
@@ -232,7 +257,10 @@ while ($produit = $liste_produit->fetch(PDO::FETCH_ASSOC)) {
 }
 echo '</table>';
 echo '</div>';
+?>
+</div>
 
+<?php
 /**************************************************************************
  **************************************************************************
  *********** FIN AFFICHAGE DES PRODUITS POUR LA GESTION ADMIN ***************
@@ -240,8 +268,8 @@ echo '</div>';
  *************************************************************************/
 
 // controle de la recuperation des dates produits quand on enregistre une nouvelle salle
-vd($control_date);
-vd($nb_produit);
+// vd($control_date);
+// vd($nb_produit);
 // vd($mod_prod);
 
 if (empty($_GET['action']) || $_GET['action'] != 'modifier' && $_GET['action'] != 'supprimer') {

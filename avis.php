@@ -64,5 +64,5 @@ include 'inc/nav.inc.php';
         </form>
     </section>
 <?php
-vd($_SESSION);
+// vd($_SESSION);
 include 'inc/footer.inc.php';

@@ -8,8 +8,30 @@ $liste_commande = $pdo->query("SELECT id_commande, id_membre, date_enregistremen
 
 include '../inc/header.inc.php';
 include '../inc/nav.inc.php';
+?>
+<div class="row">
 
-echo '<div class="table-responsive container">';
+    <aside class="col-2">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+            </li>
+            </li><li class="nav-item">
+                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+            </li>
+        </ul>
+    </aside>
+<?php
+echo '<div class=" col-10 table-responsive container">';
 echo '<table class="table table-bordered">';
 echo '<tr>';
 echo '<th>id commande</th>';
@@ -33,6 +55,9 @@ while ($commande = $liste_commande->fetch(PDO::FETCH_ASSOC)){
 
 echo '</table>';
 echo '</div>';
+?>
 
+</div>
 
+<?php
 include '../inc/footer.inc.php';

@@ -68,8 +68,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'reserver') {
 
 include 'inc/header.inc.php';
 include 'inc/nav.inc.php';
-vd($_SESSION);
-vd($infos);
+// vd($_SESSION);
+// vd($infos);
 
 ?>
     <section class="container">

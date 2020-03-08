@@ -17,7 +17,7 @@ if (isset($_GET['id_produit'])) {
     $id_produit = $_GET['id_produit'];
 
     // recuperation des infos du produits pour l'affichage de la fiche produit
-    $infos_produit = $pdo->query("SELECT AVG(avis.note) AS NOTE, produit.id_salle, date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
+    $infos_produit = $pdo->query("SELECT ROUND(AVG(avis.note), 1) AS NOTE, produit.id_salle, date_arrivee, date_depart, prix, etat, titre, description, photo, ville, adresse, cp, capacite, categorie 
                                             FROM avis, produit, salle
                                             WHERE avis.id_salle = salle.id_salle 
                                             AND produit.id_produit = $id_produit 
@@ -111,7 +111,7 @@ include 'inc/nav.inc.php';
             <div class="col-4">
                 <p>Adresse
                     : <?php echo $infos[0]['adresse'] . ', ' . $infos[0]['cp'] . ', ' . $infos[0]['ville']; ?></p>
-                <p>Tarif : <?php echo $infos[0]['prix'] ?></p>
+                <p>Tarif : <?php echo $infos[0]['prix'] ?> €</p>
             </div>
         </div>
     </section>

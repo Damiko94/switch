@@ -8,7 +8,7 @@ include '../inc/fonction.inc.php';
  * ********************************************************************************************************************
  *********************************************************************************************************************/
 
-$notes_salle = $pdo->query("SELECT titre, AVG(note) AS NOTE
+$notes_salle = $pdo->query("SELECT titre, ROUND(AVG(note), 1) AS NOTE
                                       FROM salle, avis
                                       WHERE salle.id_salle = avis.id_salle 
                                       GROUP BY salle.id_salle 

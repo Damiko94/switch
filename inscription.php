@@ -59,7 +59,7 @@ if (
         // cas d'erreur, caractere non autorisé
         $msg .= '<div class="alert alert-danger mt-3">Le format de votre email est invalide.</div>';
     }
-    // on verifie si il n'existe pas de message d'erreur avtn de rentrer les informations en base de données
+    // on verifie si il n'existe pas de message d'erreur avant de rentrer les informations en base de données
     if (empty($msg)) {
 
         // verification de la disponibilité du pseudo

@@ -4,7 +4,7 @@
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="index.php">Switch</a>
+        <a class="navbar-brand" href="<?php echo URL ?>index.php">Switch</a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="presentation.php">Qui sommes nous?</a>

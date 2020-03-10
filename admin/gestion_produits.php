@@ -149,7 +149,7 @@ $liste_produit = $pdo->query("SELECT * FROM produit");
                 <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
+                <a class="nav-link active" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
             </li><li class="nav-item">
                 <a class="nav-link" href="<?php echo URL ?>admin/gestion_membres.php">Gestion des membres</a>
             </li><li class="nav-item">
@@ -166,6 +166,9 @@ $liste_produit = $pdo->query("SELECT * FROM produit");
 <?php
 
 echo '<div class="col-10 table-responsive">';
+
+echo '<h1 class="alert-info text-dark text-center">Gestion des produits</h1>';
+
 echo '<table class="table table-bordered">';
 echo '<tr>';
 echo '<th>Id produit</th>';

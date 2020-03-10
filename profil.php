@@ -16,8 +16,7 @@ if (!user_is_connect()){
                                                AND produit.id_salle = salle.id_salle
                                                ");
     $nb_commande = $profil_commandes->rowCount();
-    vd($_SESSION);
-    }
+}
 ?>
 
 <div class="container table-responsive">

@@ -99,12 +99,13 @@ include '../inc/nav.inc.php';
                 <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
             </li>
             </li><li class="nav-item">
-                <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
+                <a class="nav-link active" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
             </li>
         </ul>
     </aside>
 
-    <section class="col-10">
+    <section class="col-10 container text-center font-weight-bold">
+        <h1 class="alert-info text-dark text-center">Statistiques</h1>
         <p>
             <a href="?action=note">Top 5 des salles les mieux notées</a>
         </p>

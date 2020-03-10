@@ -67,13 +67,12 @@ if (
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
 
     // preparation à l'enregistrement des variables en BDD
-    // conditions pour faire une modification du produit dasn la base de donnée
+    // conditions pour faire une modification du produit dans la base de donnée
     if (!empty($_GET['id_membre'])) {
         // si $_GET['id_membre'] n'est pas vide c'est un UPDATE
         $id_membre = $_GET['id_membre'];
         $enregistrement_membre = $pdo->prepare("UPDATE membre 
                                                        SET pseudo = :pseudo,
-                                                           mdp = :mdp,
                                                            nom = :nom,
                                                            prenom = :prenom,
                                                            email = :email,
@@ -82,7 +81,6 @@ if (
                                                         WHERE id_membre = :id_membre");
         $enregistrement_membre->bindParam(":id_membre", $id_membre, PDO::PARAM_STR );
         $enregistrement_membre->bindParam(":pseudo", $pseudo, PDO::PARAM_STR);
-        $enregistrement_membre->bindParam(":mdp", $mdp, PDO::PARAM_STR);
         $enregistrement_membre->bindParam(":nom", $nom, PDO::PARAM_STR);
         $enregistrement_membre->bindParam(":prenom", $prenom, PDO::PARAM_STR);
         $enregistrement_membre->bindParam(":email", $email, PDO::PARAM_STR);
@@ -109,7 +107,7 @@ include '../inc/nav.inc.php';
  **************************************************************************
  *************************************************************************/
 
-vd($_POST);
+// vd($_POST);
 ?>
     <div class="row">
 
@@ -178,6 +176,10 @@ vd($_POST);
             echo '</tr>';
 
             if (isset($_GET['action']) && $_GET['action'] == 'modifier' && isset($_GET['id_membre']) && $_GET['id_membre'] == $membre['id_membre']) {
+                $num_membre = htmlspecialchars($_GET['id_membre']);
+                $infos_membre = $pdo->query("SELECT * FROM membre WHERE id_membre = $num_membre");
+                $form_membre = $infos_membre->fetchAll(PDO::FETCH_ASSOC);
+                vd($form_membre);
                 ?>
                 <tr>
                     <td colspan="9">
@@ -189,38 +191,34 @@ vd($_POST);
                                 <div class="col-6 p-3">
                                     <div class="form-group">
                                         <label for="pseudo">Pseudo</label>
-                                        <input type="text" id="pseudo" name="pseudo" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="mdp">Mot de passe</label>
-                                        <input type="password" id="mdp" name="mdp" class="form-control">
+                                        <input type="text" id="pseudo" name="pseudo" class="form-control" value="<?= $form_membre[0]['pseudo'] ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="nom">Nom</label>
-                                        <input type="text" id="nom" name="nom" class="form-control">
+                                        <input type="text" id="nom" name="nom" class="form-control" value="<?= $form_membre[0]['nom'] ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="prenom">Prénom</label>
-                                        <input type="text" id="prenom" name="prenom" class="form-control">
+                                        <input type="text" id="prenom" name="prenom" class="form-control" value="<?= $form_membre[0]['prenom'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-6 p-3">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" id="email" name="email" class="form-control">
+                                        <input type="email" id="email" name="email" class="form-control" value="<?= $form_membre[0]['email'] ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="civilite">Civilité</label>
                                         <select name="civilite" id="civilite" class="form-control">
-                                            <option value="m">Homme</option>
-                                            <option value="f">Femme</option>
+                                            <option value="m"<?php if ($form_membre[0]['civilite'] == 'm') { echo 'selected'; } ?> >Homme</option>
+                                            <option value="f"<?php if ($form_membre[0]['civilite'] == 'f') { echo 'selected'; } ?>>Femme</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="statut">Statut</label>
                                         <select name="statut" id="statut" class="form-control">
-                                            <option value="2">Admin</option>
-                                            <option value="1">Membre</option>
+                                            <option value="2"<?php if ($form_membre[0]['statut'] == '2') { echo 'selected'; } ?>>Admin</option>
+                                            <option value="1"<?php if ($form_membre[0]['statut'] == '1') { echo 'selected'; } ?>>Membre</option>
                                         </select>
                                     </div>
                                     <div class="form-group">

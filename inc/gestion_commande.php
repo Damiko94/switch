@@ -24,6 +24,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'supprimer' && !empty($_GET['id_
     $suppression = $pdo->prepare("DELETE FROM commande WHERE id_commande = :id_commande");
     $suppression->bindParam(":id_commande", $_GET['id_commande'], PDO::PARAM_STR);
     $suppression->execute();
+    $changement_statut_produit = $pdo->prepare("UPDATE produit SET etat = :etat WHERE id_produit = :id_produit");
+    $changement_statut_produit->bindParam(":id_produit", $id_produit, PDO::PARAM_STR);
+    $changement_statut_produit->bindParam(":etat", $etat, PDO::PARAM_STR);
+    $changement_statut_produit->execute();
 
     $_GET['action'] = 'affichage'; // pour provoquer l'affichege des articles
 }

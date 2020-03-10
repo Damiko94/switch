@@ -55,7 +55,7 @@ $liste_avis = $pdo->query("SELECT avis.*, membre.email, salle.titre
             </li><li class="nav-item">
                 <a class="nav-link" href="<?php echo URL ?>admin/gestion_commandes.php">Gestion des commandes</a>
             </li><li class="nav-item">
-                <a class="nav-link" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
+                <a class="nav-link active" href="<?php echo URL ?>admin/gestion_avis.php">Gestion des avis</a>
             </li>
             </li><li class="nav-item">
                 <a class="nav-link" href="<?php echo URL ?>admin/statistiques.php">Statistiques</a>
@@ -63,6 +63,7 @@ $liste_avis = $pdo->query("SELECT avis.*, membre.email, salle.titre
         </ul>
     </aside>
     <div class="col-10 container table-responsive">
+        echo '<h1 class="alert-info text-dark text-center">Gestion des avis</h1>';
     <table class="table table-bordered">
     <tr>
         <th>id avis</th>

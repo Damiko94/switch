@@ -54,6 +54,7 @@ if (isset($_SESSION)) {
             </ul>
         </aside>
         <section class="col-10">
+            <h1 class="alert-info text-dark text-center">Gestion Administrateur</h1>
             <div class="row">
                 <div class="col-3">
                     <h3>Commandes :</h3>

@@ -193,7 +193,7 @@ include '../inc/nav.inc.php';
 <aside class="col-2">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
+                    <a class="nav-link active" href="<?php echo URL ?>admin/gestion_salle.php">Gestion des salles</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo URL ?>admin/gestion_produits.php">Gestion des produits</a>
@@ -213,6 +213,8 @@ include '../inc/nav.inc.php';
 $liste_salle = $pdo->query("SELECT * FROM salle");
 
 echo '<div class="col-10 table-responsive">';
+
+echo '<h1 class="alert-info text-dark text-center">Gestion des salles</h1>';
 
 echo '<table class="table table-bordered">';
 echo '<tr>';
